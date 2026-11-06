@@ -1,5 +1,5 @@
 // Cache-first so the prototype keeps working without wifi once opened.
-const CACHE = 'still-v2';
+const CACHE = 'still-v3';
 
 self.addEventListener('install', e => {
   e.waitUntil((async () => {

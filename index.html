@@ -583,7 +583,12 @@ stage.addEventListener('pointerup', ev => {
   if (p.moved) { pressCancel(); return; }
   if (p.ctl) { pressCtl(p.ctl, false); if (!busy) { hapt(); p.ctl.tap(); } return; }
   const h = p.hot;
-  if (!h) { flashHints(); return; }
+  if (!h) {
+    const ov = OVERLAY[top().id], q = p.p;
+    const outside = ov && (ov.type === 'sheet' ? q.y < ov.top : !ov.rects.some(r => q.x >= r[0] && q.x <= r[0] + r[2] && q.y >= r[1] && q.y <= r[1] + r[3]));
+    if (outside) { hapt(); back(); return; }
+    flashHints(); return;
+  }
   hapt();
   // the acknowledge reactions bloom before moving on
   if (top().id === '16:1141' && h.r[2] === 48 && h.r[1] === 446) { bloom(h.r); pressRelease(); setTimeout(() => go(h.to, h.t), 420); return; }
@@ -821,9 +826,9 @@ async function shareInvite() {
   try { await navigator.clipboard.writeText(url); } catch (_) {}
   toast('Invite link copied');
 }
-function confirmSheet({ title, sub, ok, onOk }) {
+function confirmSheet({ title, sub, ok, onOk, safe }) {
   const w = el('div', 'csheet');
-  w.innerHTML = `<div class="sc"></div><div class="bx"><div class="card"><p><b>${title}</b>${sub}</p><button class="danger">${ok}</button></div><button class="cancel">Cancel</button></div>`;
+  w.innerHTML = `<div class="sc"></div><div class="bx"><div class="card"><p><b>${title}</b>${sub}</p><button class="danger"${safe ? ' style="color:#221e1a"' : ''}>${ok}</button></div><button class="cancel">Cancel</button></div>`;
   stage.appendChild(w);
   const bx = w.querySelector('.bx'), sc = w.querySelector('.sc');
   sc.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240 });
@@ -1024,6 +1029,7 @@ const CTRL = {
     let left = 24; const tick = () => { rs.innerHTML = left > 0 ? `Resend code in 0:${String(left).padStart(2, '0')}` : `<b style="color:${K.clayDk};font-weight:600">Resend code</b>`; };
     tick(); const iv = setInterval(() => { if (!a.page.isConnected) return clearInterval(iv); if (left > 0) { left--; tick(); } }, 1000);
     a.act([20, 396, 240, 30], () => { if (left > 0) { shake(rs); return; } left = 30; tick(); toast('New code sent to nithya@hey.com'); });
+    a.act([114, 774, 162, 36], () => back());
   },
   '14:384'(a) { // Create circle
     a.field({ key: 'cc.name', box: [20, 410, 350, 48], text: [38, 422, 306, 24], val: 'College friends', focusVar: true });
@@ -1054,22 +1060,40 @@ const CTRL = {
   '14:740'(a) { a.radios('pace', 1, rowsPace(214, 86, ['Get regular notifications', 'A few updates a day · recommended', 'Only important updates, once a day'])); },
   '38:4269'(a) { a.radios('pace', 1, rowsPace(140, 86, ['Every moment, as it happens', 'Up to 3 digests a day', 'One digest at 19:00'])); notifToggles(a); },
   '38:5090'(a) { a.radios('pace', 1, rowsPace(140, 86, ['Every moment, as it happens', 'Up to 3 digests a day', 'One digest at 19:00'])); notifToggles(a); },
-  '16:569'(a) { homeBits(a); }, '16:842'(a) { homeBits(a); }, '38:4469'(a) { homeBits(a, true); }, '18:1854'(a) { homeBits(a); }, '22:3032'(a) { homeBits(a); }, '23:3511'(a) { homeBits(a); },
-  '16:964'(a) { deck(a); },
+  '16:569'(a) { homeBits(a, false, { newChip: true }); }, '16:842'(a) { homeBits(a, false, { newChip: true }); }, '18:1854'(a) { homeBits(a); },
+  '38:4469'(a) { homeBits(a, true, { newChip: true }); a.act([20, 584, 350, 52], a.go('16:1079', 'f400')); a.act([20, 656, 350, 52], a.go('16:1079', 'f400')); a.act([297, 544, 73, 36], a.go('22:3173')); },
+  '22:3032'(a) { homeBits(a); a.act([20, 295, 350, 60], a.go('16:1079', 'f400')); a.act([20, 361, 350, 60], a.go('16:1079', 'f400')); },
+  '23:3511'(a) { homeBits(a, false, { quiet: true }); },
+  '22:2911'(a) { homeBits(a, false, { only: true }); [['Aarav', 355], ['Diya', 397]].forEach(([n, y]) => a.act([20, y, 350, 42], a.toast(`${n} hasn’t joined yet — we’ll nudge them once, gently`))); },
+  '16:964'(a) { deck(a); }, '38:4677'(a) { deck(a, true); },
   '16:1079'(a) { // reply privately
     const p = el('div', 'ctl', rectCss([16, 750, 306, 44]) + 'border-radius:22px;background:rgba(40,32,26,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.75)'); a.d.appendChild(p);
     a.field({ key: 'reply', box: [16, 750, 306, 44], text: [33, 762, 270, 20], ph: 'Reply privately…', fs: 14, fill: 'transparent', color: '#fff', phc: 'rgba(255,255,255,.92)', cr: 22, enter: 'send',
       onEnter: inp => { if (!inp.value.trim()) return inp.blur(); toast('Reply sent privately to Diya'); inp.value = ''; STATE.reply = ''; inp.blur(); } });
   },
-  '16:1228'(a) { a.seg('upd.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['College', 'All circles']); },
   '22:3173'(a) { a.seg('upd.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['College', 'All circles']); },
   '20:1915'(a) { a.seg('loops.seg', [20, 158, 350, 40], [[24, 162, 169, 32], [197, 162, 169, 32]], ['Active (2)', 'Past']); a.act([20, 486, 350, 128], a.go('20:2155')); },
-  '38:4199'(a) { a.seg('saved.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['Moments', 'Places']); },
-  '18:1316'(a) { // photo tools
-    [['Crop', 52], ['Filters', 132], ['Add text', 214], ['Retake photo', 296]].forEach(([n, x]) => {
-      const r = el('div', 'ctl', rectCss([x - 3, 625, 46, 46]) + 'border-radius:50%;box-sizing:border-box;border:2px solid transparent;transition:border-color .2s'); a.d.appendChild(r);
-      a.act([x, 628, 40, 40], () => { a.d.querySelectorAll('.tool-on').forEach(t => { t.classList.remove('tool-on'); t.style.borderColor = 'transparent'; }); r.classList.add('tool-on'); r.style.borderColor = K.clay; toast(n); });
+  '18:1316'(a) { // photo editor
+    const P = [20, 116, 350, 427];
+    const warm = cropEl('18:1316', P); warm.style.cssText += 'border-radius:16px;filter:sepia(.28) saturate(1.25) brightness(1.03);opacity:0;transition:opacity .35s'; a.d.appendChild(warm);
+    const own = el('div', 'ctl', rectCss(P) + 'border-radius:16px;background:center/cover no-repeat;opacity:0;transition:opacity .35s'); a.d.appendChild(own);
+    if (STATE.photo) { own.style.backgroundImage = `url(${STATE.photo})`; own.style.opacity = 1; }
+    const rings = [];
+    const tools = [['Crop', 52, () => toast('Crop · pinch the photo to frame it')],
+      ['Warmth', 132, () => { STATE.warm = !STATE.warm; warm.style.opacity = STATE.warm ? 1 : 0; toast(STATE.warm ? 'Warmth on' : 'Warmth off'); }],
+      ['Caption', 214, () => go('18:1744', 'p300')],
+      ['Camera', 296, () => pickFile(url => { STATE.photo = url; own.style.backgroundImage = `url(${url})`; own.style.opacity = 1; toast('Photo added'); })]];
+    tools.forEach(([n, x, fn]) => {
+      const r = el('div', 'ctl', rectCss([x - 3, 625, 46, 46]) + 'border-radius:50%;box-sizing:border-box;border:2px solid transparent;transition:border-color .2s'); a.d.appendChild(r); rings.push(r);
+      a.act([x, 628, 40, 40], () => { rings.forEach(t => t.style.borderColor = 'transparent'); r.style.borderColor = K.clay; fn(); });
     });
+    // gallery strip: pick which photo
+    const cx = [48.5, 109, 168, 227, 286, 344];
+    // the mock draws photo 1 bigger with its ring on top, so its frame is drawn separately
+    const th = cx.map((c, i) => { const e = el('div', 'ctl', rectCss(i ? [c - 28.5, 557.5, 57, 57] : [19.5, 559.5, 57.8, 52.7]) + 'border-radius:12px;box-sizing:border-box;transition:border-color .2s'); a.d.appendChild(e); return e; });
+    const paint = v => th.forEach((e, i) => { e.style.border = `${i ? 2.5 : 4}px solid ${i === v ? K.clay : a.bg}`; if (!i) e.style.boxShadow = `0 0 0 1.5px ${a.bg}`; });
+    paint(st('thumb', 0));
+    cx.forEach((c, i) => a.act([c - 26, 560, 52, 52], () => { STATE.thumb = i; paint(i); STATE.photo = null; own.style.opacity = 0; if (i) toast('Photo ' + (i + 1) + ' of 6 selected'); }));
   },
   '18:1427'(a) { // note
     const ta = a.field({ key: 'note', area: true, box: [20, 114, 350, 200], text: [37, 131, 316, 142], val: 'Finally finished the first chapter. Small wins.', counter: [37, 281, 316, 16], max: 200, cr: 16 });
@@ -1097,15 +1121,35 @@ const CTRL = {
     const btn = a.button([20, 762, 350, 48], { label, style: 'accent', disabled: () => !C.some(c => STATE['to.' + c[0]]), tap: () => go(navigator.onLine === false ? '22:3256' : '18:1854', 'f400') });
     C.forEach(([n, y, on]) => a.check([348, y, 22, 22], 'to.' + n, on, [20, y - 23, 350, 68], () => btn._paint()));
   },
-  '22:3256'(a) { [['College', 241, true], ['Bangalore', 325, false]].forEach(([n, y, on]) => a.check([348, y, 22, 22], 'to.' + n, on, [20, y - 23, 350, 68])); },
-  '19:1828'(a) { a.act([20, 400, 350, 64], a.toast('Opening Blue Tokai in Maps…')); },
-  '38:4779'(a) { a.act([20, 400, 350, 64], a.toast('Opening Blue Tokai in Maps…')); a.act([20, 714, 350, 48], a.go('19:1932')); a.act([153, 774, 84, 36], a.go('19:1987', 'u320')); },
+  '19:1828'(a) { a.act([20, 400, 350, 64], a.toast('Opening Blue Tokai in Maps…')); a.act([20, 481, 350, 114], a.toast('Opening Blue Tokai in Maps…')); },
+  '14:33'(a) { pager(a, '14:105'); }, '14:105'(a) { pager(a, '14:211'); [82, 142, 202, 262].forEach(x => a.act([x, 521, 46, 46], () => bloom([x, 521, 46, 46]), { noPress: true })); },
+  '14:211'(a) { pager(a, '14:284'); a.act([58, 573, 240, 37], a.go('14:284')); },
+  '16:1141'(a) { a.act([171, 762, 48, 48], () => back()); },
+  '16:1228'(a) { a.seg('upd.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['College', 'All circles']); [332, 443, 504, 566].forEach(y => a.act([20, y, 350, 60], a.go('16:1079', 'f400'))); a.act([334, 58, 40, 40], a.toast('Mark all as seen')); },
+  '37:4180'(a) { a.act([20, 458, 350, 60], a.go('38:4199')); },
+  '19:1987'(a) { a.act([110, 766, 170, 26], a.toast('You and Diya both saved Blue Tokai. Diya never sees where you are.')); },
+  '21:2746'(a) {
+    a.field({ key: 'mem.q', box: [20, 114, 350, 40], text: [58, 124, 300, 20], ph: 'Search members', kind: 'search', fs: 14, fill: '#ece3d9' });
+    [['Nithya', 'that’s you · creator of College'], ['Diya', 'in College since 2 Oct'], ['Aarav', 'in College since 2 Oct'], ['Meera', 'in College since 4 Oct'], ['Karthik', 'invite pending · reminder sent'], ['Rohan', 'invite pending · reminder sent']]
+      .forEach(([n, t], i) => a.act([20, 193 + i * 56, 260, 52], a.toast(`${n} — ${t}`)));
+    a.act([334, 58, 40, 40], a.toast('Only the creator can remove members'));
+  },
+  '38:4199'(a) {
+    a.seg('saved.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['Moments', 'Places']);
+    a.act([22, 165, 166, 200], a.go('16:1079', 'f400'));
+    [[[201, 165, 169, 200], 'Meera · Varkala beach'], [[22, 402, 166, 198], 'Aarav · Fort Kochi'], [[201, 402, 169, 198], 'Rohan · Sunday dosa']].forEach(([r, t]) => a.act(r, a.toast(t + ' — saved just for you')));
+  },
+  '38:4380'(a) { a.act([20, 206, 350, 78], a.toast('Bangalore · 4 people · 2 new moments')); a.act([20, 298, 350, 78], a.toast('Family · muted — moments wait quietly')); a.act([100, 778, 190, 30], a.go('37:4050')); },
+  '22:3256'(a) { [['College', 241, true], ['Bangalore', 325, false]].forEach(([n, y, on]) => a.check([348, y, 22, 22], 'to.' + n, on, [20, y - 23, 350, 68])); a.act([304, 692, 62, 36], a.go('18:1854', 'f400')); },
+  '23:3243'(a) { a.act([20, 524, 350, 66], a.go('21:2629')); },
+  '38:4779'(a) { a.act([20, 400, 350, 64], a.toast('Opening Blue Tokai in Maps…')); a.act([20, 481, 350, 114], a.toast('Opening Blue Tokai in Maps…')); a.act([20, 714, 350, 48], a.go('19:1932')); a.act([153, 774, 84, 36], a.go('19:1987', 'u320')); },
   '19:1932'(a) {
     a.field({ key: 'loopq', area: true, box: [20, 322, 350, 150], text: [37, 339, 316, 92], ph: 'e.g. Should we try this together next time?', counter: [37, 439, 316, 16], max: 200, cr: 16 });
     a.toggle([310, 506, 44, 26], 'loop.plan', false, [20, 490, 350, 58], v => v && toast('Plan suggestion added'));
   },
   '20:2089'(a) { a.field({ key: 'add.loop', area: true, box: [20, 406, 350, 130], text: [37, 423, 316, 72], val: 'I went to the Indiranagar branch, it’s amazing!', counter: [37, 503, 316, 16], max: 200, cr: 16 }); },
-  '20:2155'(a) { composer(a, false); }, '38:4865'(a) { composer(a, true); },
+  '20:2155'(a) { composer(a, false); loopBits(a); },
+  '38:4865'(a) { composer(a, true); loopBits(a); a.act([16, 762, 40, 40], a.go('20:2276', 'u320')); a.act([16, 536, 358, 126], a.go('20:2378')); },
   '20:2276'(a) { // plan together
     a.field({ key: 'pl.what', box: [20, 254, 350, 48], text: [37, 266, 316, 24], val: 'Coffee at Blue Tokai' });
     a.field({ key: 'pl.date', box: [20, 334, 169, 48], text: [63, 346, 109, 24], val: 'Sat, 7 Nov', kind: 'date' });
@@ -1114,6 +1158,7 @@ const CTRL = {
     a.field({ key: 'pl.note', box: [20, 494, 350, 48], text: [37, 506, 316, 24], ph: 'Add a note (optional)' });
   },
   '20:2378'(a) { // RSVP
+    a.act([334, 58, 40, 40], a.toast('Plan saved to your calendar'));
     const opts = [['Going', [41, 351, 97, 36]], ['Maybe', [146, 351, 99, 36]], ['Can’t', [252, 351, 97, 36]]];
     const bs = []; const paint = () => bs.forEach((b, i) => b._paint());
     opts.forEach(([t, r], i) => bs.push(a.button(r, { label: t, small: true, style: 'secondary', tap: () => { STATE.rsvp = i; paint(); toast(i === 0 ? 'You’re going — see you there' : i === 1 ? 'Marked as maybe' : 'No worries — the loop stays open'); } })));
@@ -1121,7 +1166,8 @@ const CTRL = {
     bs.forEach((b, i) => { const p = b._paint; b._paint = () => { p(); const on = STATE.rsvp === i; b.style.background = on ? K.clay : '#fff'; b.style.color = on ? '#fff' : K.ink; b.style.border = on ? 'none' : `1px solid ${K.line}`; b.innerHTML = (on ? svg('check', 15, '#fff', 2) : '') + `<span>${opts[i][0]}</span>`; }; });
     paint();
   },
-  '21:2332'(a) { profile(a, '38:4269'); }, '38:4966'(a) { profile(a, '38:5090'); },
+  '21:2332'(a) { profile(a, '38:4269'); },
+  '38:4966'(a) { profile(a, '38:5090'); a.act([210, 256, 108, 34], a.go('38:4104')); a.act([36, 310, 318, 52], a.go('38:4380')); a.act([36, 363, 318, 52], a.go('38:4199')); a.act([36, 469, 318, 52], a.go('21:2629')); },
   '21:2516'(a) {
     a.toggle([310, 380, 44, 26], 'mute', true, [36, 367, 318, 52], v => toast(v ? 'College muted' : 'College unmuted'));
     a.act([36, 208, 318, 52], a.toast('Renaming circles comes in the next version'));
@@ -1132,7 +1178,6 @@ const CTRL = {
     [['Sharing preferences', 140], ['Audience control', 193], ['Blocked users', 246], ['Data & privacy', 299]].forEach(([n, y]) => a.act([36, y, 318, 52], a.toast(n + ' — coming in the next version')));
     a.act([36, 389, 318, 52], a.go('38:4269'));
   },
-  '21:2746'(a) { a.field({ key: 'mem.q', box: [20, 114, 350, 40], text: [58, 124, 300, 20], ph: 'Search members', kind: 'search', fs: 14, fill: '#ece3d9' }); },
   '38:4104'(a) { // edit profile + real photo
     avatar(a, [151, 114, 88, 88]);
     a.act([123, 222, 145, 36], () => pickPhoto(a));
@@ -1151,6 +1196,7 @@ const CTRL = {
     const upd = () => { m1.style.opacity = okEmail(STATE['e1.email'] || '') ? 1 : 0; m2.style.opacity = okPw(STATE['e1.pw'] || '') ? 1 : 0; btn && btn._paint(); };
     a.field({ key: 'e1.email', box: [20, 282, 350, 48], text: [37, 294, 290, 24], val: STATE['su.email'] && !okEmail(STATE['su.email']) ? STATE['su.email'] : 'nithya@hey', kind: 'email', error: true, valid: okEmail, onInput: upd });
     a.field({ key: 'e1.pw', box: [20, 362, 350, 48], text: [37, 374, 290, 24], val: STATE['su.pw'] && !okPw(STATE['su.pw']) ? STATE['su.pw'] : 'abcd', kind: 'password', error: true, valid: okPw, onInput: upd });
+    a.act([20, 516, 350, 58], a.go('37:3882'));
     btn = a.button([20, 450, 350, 48], { label: 'Continue', disabled: () => !(okEmail(STATE['e1.email'] || '') && okPw(STATE['e1.pw'] || '')), tap: () => { STATE['su.email'] = STATE['e1.email']; STATE['su.pw'] = STATE['e1.pw']; go('37:3986', 'p300'); } });
     upd();
   },
@@ -1167,10 +1213,23 @@ function notifToggles(a) {
   a.toggle([310, 590, 44, 26], 'reminders', true, [36, 577, 318, 52]);
   a.toggle([310, 643, 44, 26], 'recap', true, [36, 630, 318, 52]);
 }
-function homeBits(a, dark) {
+function homeBits(a, dark, o = {}) {
   a.act([286, 58, 40, 40], a.toast('Search comes in the next version'));
+  if (o.quiet) a.act([330, 58, 40, 40], a.go('21:2629'));
+  else a.act([330, 58, 40, 40], a.go('37:4180'));
   a.act([20, 114, 72, 84], () => {});
+  if (o.only) return;
+  a.act([108, 114, 72, 84], dark ? a.toast('Bangalore · nothing new since this morning') : a.go('16:842', 'f200'));
   a.act([196, 114, 72, 84], a.go(dark ? '38:4469' : '16:842', 'f200'));
+  if (o.newChip) a.act([284, 114, 72, 84], a.go('14:384'));
+}
+function pager(a, next) {
+  const c = a.act([0, 104, 390, 590], () => {}, { noPress: true });
+  c.drag = (dx, dy, phase) => { if (phase === 'end') { if (dx < -50 && Math.abs(dx) > Math.abs(dy)) go(next, 'p300'); else if (dx > 50 && stack.length > 1) back(); } };
+}
+function loopBits(a) {
+  a.act([55, 207, 220, 147], a.go('16:1079', 'f400'));
+  a.act([334, 58, 40, 40], () => confirmSheet({ title: 'Blue Tokai Café', sub: 'Muting keeps the loop, without notifications.', safe: true, ok: STATE.loopMuted ? 'Unmute loop' : 'Mute loop', onOk: () => { STATE.loopMuted = !STATE.loopMuted; toast(STATE.loopMuted ? 'Loop muted' : 'Loop unmuted'); } }));
 }
 function profile(a, notif) {
   avatar(a, [151, 74, 88, 88]);
@@ -1183,6 +1242,18 @@ function avatar(a, r) {
   const e = el('div', 'ctl avatar', rectCss(r) + `border-radius:50%;background:url(${STATE.avatar}) center/cover`); a.d.appendChild(e);
 }
 const filePick = (() => { const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*'; f.style.display = 'none'; document.body.appendChild(f); return f; })();
+function pickFile(done) {
+  filePick.value = '';
+  filePick.onchange = () => {
+    const file = filePick.files && filePick.files[0]; if (!file) return;
+    const img = new Image(); img.onload = () => {
+      const c = document.createElement('canvas'); const k = Math.min(1, 1200 / Math.max(img.width, img.height)); c.width = img.width * k; c.height = img.height * k;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); done(c.toDataURL('image/jpeg', .85)); URL.revokeObjectURL(img.src);
+    };
+    img.src = URL.createObjectURL(file);
+  };
+  filePick.click();
+}
 function pickPhoto(a) {
   filePick.value = '';
   filePick.onchange = () => {
@@ -1200,11 +1271,11 @@ function pickPhoto(a) {
   filePick.click();
 }
 /* postcard deck: swipe or tap the arrows; counter updates; last card → done */
-function deck(a) {
+function deck(a, dark) {
   const R = [35, 184, 320, 470], n = 5;
   let i = st('deck', 1);
   a.d.appendChild(el('div', 'ctl', rectCss([150, 684, 90, 28]) + `background:${a.bg}`));
-  const ctr = el('div', 'ctl', rectCss([150, 684, 90, 28]) + `display:grid;place-items:center;font:500 15px/1 "DM Sans";color:${K.ink2}`); a.d.appendChild(ctr);
+  const ctr = el('div', 'ctl', rectCss([150, 684, 90, 28]) + `display:grid;place-items:center;font:500 15px/1 "DM Sans";color:${dark ? DK.text2 : K.ink2}`); a.d.appendChild(ctr);
   const show = () => { ctr.textContent = `${i} / ${n}`; };
   show();
   const card = () => { const c = cropEl(a.page.dataset.id, R); c.style.zIndex = 2; return c; };
