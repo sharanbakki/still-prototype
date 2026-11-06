@@ -120,6 +120,7 @@ body.desk{touch-action:auto}
 body.desk #stage{position:relative;inset:auto;width:var(--pw);height:var(--ph);border-radius:calc(var(--pk) * 50px);box-shadow:0 0 0 calc(var(--pk)*11px) #1E1A17,0 0 0 calc(var(--pk)*12.5px) #3A332D,0 40px 80px rgba(40,25,15,.28)}
 #desk{display:none}
 body.desk #desk{display:grid;grid-template-columns:auto minmax(280px,420px);gap:72px;align-items:center;justify-content:center;height:100%;padding:32px}
+#deskPanel{max-height:calc(100vh - 64px);overflow:auto;padding-right:6px}
 #deskPanel h1{font-family:var(--serif);font-weight:400;font-size:52px;line-height:1}
 #deskPanel .sub{color:var(--ink2);font-size:17px;line-height:1.45;margin:12px 0 26px}
 #deskPanel .qr{display:flex;gap:16px;align-items:center;background:#FBF8F4;border-radius:18px;padding:14px;margin-bottom:24px}
