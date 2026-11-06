@@ -1,5 +1,5 @@
 // Cache-first so the prototype keeps working without wifi once opened.
-const CACHE = 'still-v1';
+const CACHE = 'still-v2';
 
 self.addEventListener('install', e => {
   e.waitUntil((async () => {
@@ -7,6 +7,7 @@ self.addEventListener('install', e => {
     const data = await (await fetch('data.json', { cache: 'no-cache' })).json();
     const files = ['./', 'index.html', 'data.json', 'manifest.webmanifest', 'apple-touch-icon.png', 'favicon.png',
       'icons/icon-192.png', 'icons/icon-512.png', 'icons/qr.svg',
+      'fonts/DMSans-400-latin-ext.woff2', 'fonts/DMSans-400-latin.woff2', 'fonts/DMSans-500-latin-ext.woff2', 'fonts/DMSans-500-latin.woff2', 'fonts/DMSans-600-latin-ext.woff2', 'fonts/DMSans-600-latin.woff2', 'fonts/Newsreader-400-latin-ext.woff2', 'fonts/Newsreader-400-latin.woff2', 'fonts/fonts.css',
       ...Object.values(data.screens).map(s => s.img)];
     await c.addAll(files);
     self.skipWaiting();

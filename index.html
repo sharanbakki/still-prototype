@@ -26,9 +26,7 @@
 <link rel="apple-touch-startup-image" href="splash/1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
 <link rel="apple-touch-startup-image" href="splash/1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
 <link rel="apple-touch-startup-image" href="splash/750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{
   --sand:#F4EEE7; --sand2:#EAE1D5; --ink:#211D1A; --ink2:#5C534B; --ink3:#8A8076; --clay:#C9694A; --clay-soft:#F6E2D9;
@@ -58,6 +56,34 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webki
 .ring{position:absolute;border-radius:50%;border:2px solid var(--clay);pointer-events:none}
 .shimmer{position:absolute;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.65) 50%,rgba(255,255,255,0) 70%);background-size:250% 100%}
 .edgeShade{position:absolute;top:0;bottom:0;left:-24px;width:24px;background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.10));pointer-events:none}
+
+/* ---------- live controls (design px inside .d) ---------- */
+.ctl{position:absolute;font-family:"DM Sans",sans-serif;-webkit-font-smoothing:antialiased;color:#221e1a}
+.fld{position:absolute;border:0;outline:0;background:transparent;margin:0;padding:0;font-family:"DM Sans",sans-serif;color:#221e1a;-webkit-user-select:text;user-select:text;touch-action:manipulation;-webkit-appearance:none;appearance:none;border-radius:0;caret-color:#d07153}
+.fld::placeholder{color:var(--ph,#827060);opacity:1}
+textarea.fld{resize:none;overflow:hidden}
+.fring{position:absolute;pointer-events:none;box-sizing:border-box;transition:border-color .18s,box-shadow .18s}
+.tg{position:absolute;border-radius:13px;transition:background-color .25s ease}
+.tg i{position:absolute;top:2px;width:22px;height:22px;border-radius:11px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.08);transition:left .32s cubic-bezier(.3,.8,.25,1.15),width .18s}
+.cb{position:absolute;border-radius:6px;display:grid;place-items:center;box-sizing:border-box;transition:background-color .18s,border-color .18s}
+.pill{position:absolute;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;white-space:nowrap}
+.seg{position:absolute;border-radius:999px;background:#ece3d9}
+.seg b{position:absolute;border-radius:999px;background:#d07153;transition:left .34s cubic-bezier(.3,.8,.25,1)}
+.seg span{position:absolute;display:grid;place-items:center;font:500 12px/1 "DM Sans";letter-spacing:.2px;transition:color .25s}
+.otpb{position:absolute;border-radius:12px;background:#fff;box-sizing:border-box;display:grid;place-items:center;font:400 22px/1 "Newsreader",serif;color:#221e1a;transition:border-color .15s,box-shadow .15s}
+.otpb .caret{width:1.5px;height:26px;background:#d07153;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.bubble{position:absolute;right:16px;max-width:260px;padding:9px 14px;border-radius:18px 18px 6px 18px;background:#d07153;color:#fff;font:400 14px/20px "DM Sans";box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.toast{position:absolute;left:50%;z-index:25;transform:translateX(-50%);max-width:82%;background:rgba(34,30,26,.95);color:#fbf8f4;font:500 14px/1.35 "DM Sans",sans-serif;padding:12px 18px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.22);text-align:center;pointer-events:none}
+.csheet{position:absolute;inset:0;z-index:24;display:flex;flex-direction:column;justify-content:flex-end}
+.csheet .sc{position:absolute;inset:0;background:rgba(28,22,18,.42)}
+.csheet .bx{position:relative;margin:0 10px calc(var(--sab) + 10px);display:flex;flex-direction:column;gap:8px}
+.csheet .card{background:#fbf8f4;border-radius:16px;overflow:hidden;text-align:center}
+.csheet .card p{padding:16px 18px 12px;font:400 13px/1.4 "DM Sans";color:#5c4f45}
+.csheet .card p b{display:block;font:600 15px/1.3 "DM Sans";color:#221e1a;margin-bottom:4px}
+.csheet button{display:block;width:100%;padding:16px;font:600 17px "DM Sans";border-top:1px solid #ece3d9;background:#fbf8f4}
+.csheet button.danger{color:#b54a3e}
+.csheet button.cancel{border:0;border-radius:16px}
 
 /* ---------- loader ---------- */
 #loader{position:fixed;inset:0;z-index:50;background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .45s ease}
@@ -167,7 +193,7 @@ body.desk #desk{display:grid;grid-template-columns:auto minmax(280px,420px);gap:
 <div id="coach" hidden>
   <h4>Use it like a real app</h4>
   <ul>
-    <li><span>👆</span>Tap buttons, cards and tabs. A wrong tap briefly highlights what’s tappable.</li>
+    <li><span>👆</span>Tap buttons, tabs and cards, flip switches, tick boxes and type in any field. A wrong tap briefly highlights what’s tappable.</li>
     <li><span>👈</span>Swipe in from the left edge to go back. Drag sheets down to close.</li>
     <li><span>✋</span>Press and hold the top of the screen for every screen, flow and edge case.</li>
   </ul>
@@ -289,6 +315,7 @@ function makePage(id) {
   }
   page.appendChild(d);
   buildFx(page, d, id);
+  buildControls(page);
   placePage(page, id);
   return page;
 }
@@ -358,6 +385,7 @@ async function go(to, code = 'f300', opts = {}) {
   if (to === 'B') return back();
   if (!screens[to]) return;
   busy = true; clearTimers();
+  { const ae = document.activeElement; if (ae && /INPUT|TEXTAREA/.test(ae.tagName)) ae.blur(); }
   const cur = top();
   // already in the stack below? pop back to it
   const idx = stack.findIndex(e => e.id === to);
@@ -518,23 +546,30 @@ const hapt = (() => { const l = document.createElement('label'); const i = docum
 
 let ptr = null, holdT = null;
 stage.addEventListener('pointerdown', ev => {
+  if (ev.target.closest && ev.target.closest('.csheet')) return;
+  const ae = document.activeElement;
+  if (ev.target.closest && ev.target.closest('input,textarea')) return;       // let the real field take the tap (keyboard, caret, picker)
+  if (ae && /INPUT|TEXTAREA/.test(ae.tagName)) ae.blur();
   if (!ev.isPrimary || busy) { return; }
   const p = toDesign(ev.clientX, ev.clientY);
   const r = stage.getBoundingClientRect();
   const e = top(); if (!e) return;
-  ptr = { x0: ev.clientX, y0: ev.clientY, t0: performance.now(), p, mode: 'tap', moved: false, hot: hotAt(p) };
+  const ctl = ctlAt(p);
+  ptr = { x0: ev.clientX, y0: ev.clientY, t0: performance.now(), p, mode: 'tap', moved: false, ctl, hot: ctl ? null : hotAt(p) };
   try { stage.setPointerCapture(ev.pointerId); } catch (_) {}
   if (ev.clientX - r.left < 26 && e.enter === 'push' && stack.length > 1) ptr.mode = 'edge';
   else if (e.enter === 'sheet' && p.y >= OVERLAY[e.id].top) ptr.mode = 'sheet';
-  if (ptr.hot && ptr.mode === 'tap') pressStart(ptr.hot);
-  if (p.y < 104 && !ptr.hot) holdT = setTimeout(() => { ptr && (ptr.mode = 'held'); pressCancel(); hapt(); openMenu(); }, 600);
+  if (ctl && ptr.mode === 'tap') { if (ctl.drag) ptr.mode = 'ctl'; pressCtl(ctl, true); }
+  else if (ptr.hot && ptr.mode === 'tap') pressStart(ptr.hot);
+  if (p.y < 104 && !ptr.hot && !ctl) holdT = setTimeout(() => { ptr && (ptr.mode = 'held'); pressCancel(); hapt(); openMenu(); }, 600);
 });
 stage.addEventListener('pointermove', ev => {
   if (!ptr) return;
   const dx = ev.clientX - ptr.x0, dy = ev.clientY - ptr.y0;
-  if (!ptr.moved && Math.hypot(dx, dy) > 9) { ptr.moved = true; clearTimeout(holdT); pressCancel(); if (ptr.mode === 'tap' && dx > 30 && Math.abs(dy) < dx && top().enter === 'push') ptr.mode = 'edge'; }
+  if (!ptr.moved && Math.hypot(dx, dy) > 9) { ptr.moved = true; clearTimeout(holdT); pressCancel(); if (ptr.ctl && ptr.mode !== 'ctl') pressCtl(ptr.ctl, false); if (ptr.mode === 'tap' && dx > 30 && Math.abs(dy) < dx && top().enter === 'push') ptr.mode = 'edge'; }
   if (ptr.mode === 'edge' && stack.length > 1) dragEdge(Math.max(0, dx));
   if (ptr.mode === 'sheet') dragSheet(Math.max(0, dy));
+  if (ptr.mode === 'ctl' && ptr.moved) ptr.ctl.drag(dx, dy, 'move');
 });
 stage.addEventListener('pointerup', ev => {
   clearTimeout(holdT);
@@ -544,7 +579,9 @@ stage.addEventListener('pointerup', ev => {
   if (p.mode === 'held') return;
   if (p.mode === 'edge' && p.moved) return endEdge(dx, dx / Math.max(dt, 1));
   if (p.mode === 'sheet' && p.moved) return endSheet(dy, dy / Math.max(dt, 1));
+  if (p.mode === 'ctl' && p.moved) { pressCtl(p.ctl, false); return p.ctl.drag(dx, dy, 'end'); }
   if (p.moved) { pressCancel(); return; }
+  if (p.ctl) { pressCtl(p.ctl, false); if (!busy) { hapt(); p.ctl.tap(); } return; }
   const h = p.hot;
   if (!h) { flashHints(); return; }
   hapt();
@@ -552,7 +589,7 @@ stage.addEventListener('pointerup', ev => {
   if (top().id === '16:1141' && h.r[2] === 48 && h.r[1] === 446) { bloom(h.r); pressRelease(); setTimeout(() => go(h.to, h.t), 420); return; }
   pressRelease().then(() => go(h.to, h.t));
 });
-stage.addEventListener('pointercancel', () => { clearTimeout(holdT); pressCancel(); if (ptr && ptr.mode === 'edge') endEdge(0, 0); if (ptr && ptr.mode === 'sheet') endSheet(0, 0); ptr = null; });
+stage.addEventListener('pointercancel', () => { clearTimeout(holdT); pressCancel(); if (ptr && ptr.ctl) { pressCtl(ptr.ctl, false); if (ptr.mode === 'ctl' && ptr.moved) ptr.ctl.drag(0, 0, 'end'); } if (ptr && ptr.mode === 'edge') endEdge(0, 0); if (ptr && ptr.mode === 'sheet') endSheet(0, 0); ptr = null; });
 stage.addEventListener('touchstart', ev => { if (ev.touches.length >= 2) { clearTimeout(holdT); pressCancel(); ptr = null; openMenu(); } }, { passive: true });
 
 /* press feedback: the touched element really shrinks, like a native button */
@@ -602,6 +639,10 @@ function drawHints(persist) {
     d.appendChild(n);
     if (persist) n.style.opacity = .55;
     else n.animate([{ opacity: 0 }, { opacity: 1, offset: .2 }, { opacity: 1, offset: .6 }, { opacity: 0 }], { duration: 1100, easing: 'ease-in-out' }).finished.then(() => n.remove());
+  });
+  (e.page._ctls || []).forEach(c => {
+    const [x, y, w, hh] = c.r; const n = el('div', 'hint', rectCss(c.r) + `border-radius:${Math.min(hh / 2, 16)}px`); d.appendChild(n);
+    if (persist) n.style.opacity = .55; else n.animate([{ opacity: 0 }, { opacity: 1, offset: .2 }, { opacity: 1, offset: .6 }, { opacity: 0 }], { duration: 1100, easing: 'ease-in-out' }).finished.then(() => n.remove());
   });
 }
 
@@ -709,6 +750,7 @@ function buildDesk() {
   $('#dRestart').onclick = () => jump('14:6');
   $('#dAll').onclick = openMenu;
   addEventListener('keydown', ev => {
+    if (ev.target && /INPUT|TEXTAREA/.test(ev.target.tagName)) { if (ev.key === 'Escape') ev.target.blur(); return; }
     if (ev.key === 'Escape' || ev.key === 'Backspace') { if (!$('#menu').hidden) closeMenu(); else back(); }
     if (ev.key === 'm' || ev.key === 'M') openMenu();
     if (ev.key === 'h' || ev.key === 'H') $('#hintSw').click();
@@ -746,6 +788,502 @@ function coach() {
   const c = $('#coach'); c.hidden = false;
   c.animate([{ transform: 'translateY(30px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: EASE });
   $('#coachOk').onclick = () => { try { localStorage.setItem('still-coach', '1'); } catch (_) {} c.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(20px)' }], { duration: 260, fill: 'forwards' }).finished.then(() => c.hidden = true); };
+}
+
+/* ================================================================
+   Live controls — every field, toggle, box and button responds
+   (all geometry in Figma design points; state survives navigation)
+   ================================================================ */
+const STATE = {};
+const st = (k, d) => (k in STATE ? STATE[k] : (STATE[k] = d));
+const K = { clay: '#d07153', clayDk: '#8f452f', claySoft: '#f7dfd3', tint: '#fbefe9', ink: '#221e1a', ink2: '#5c4f45', ink3: '#827060', line: '#dfd2c4', line2: '#ece3d9', paper: '#fbf8f4', sand: '#f3eee7', err: '#b54a3e' };
+const DK = { row: '#3a322b', rowLine: '#4a4138', selRow: '#3e2a22', selLine: '#d49070', text: '#f4eee7', text2: '#b5a899', icon: '#7d7064', page: '#211d1a', field: '#3a322b', fieldLine: '#5d554c', on: '#dc8b6b' };
+const ICONS = {
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>'
+};
+const svg = (n, size, color, sw = 1.75) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${sw * 24 / size}" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+
+function toast(msg) {
+  stage.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = el('div', 'toast'); t.textContent = msg;
+  t.style.bottom = isDesk ? (110 * G.s) + 'px' : `calc(${Math.max(0, G.H - (G.oy + 690 * G.s))}px)`;
+  stage.appendChild(t);
+  t.animate([{ opacity: 0, transform: 'translate(-50%,16px) scale(.96)' }, { opacity: 1, transform: 'translate(-50%,0) scale(1)' }], { duration: 320, easing: EASE, fill: 'both' });
+  setTimeout(() => t.animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(-50%,8px)' }], { duration: 260, fill: 'forwards' }).finished.then(() => t.remove()), 2300);
+}
+function shake(n) { n && n.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-7px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(2px)' }, { transform: 'translateX(0)' }], { duration: 380, easing: 'ease-out' }); }
+async function shareInvite() {
+  const url = location.href.split('?')[0];
+  try { if (navigator.share) { await navigator.share({ title: 'Join College on STILL', text: 'Nithya invited you to “College” on STILL — a quiet place to stay in each other’s lives.', url }); return; } } catch (_) { return; }
+  try { await navigator.clipboard.writeText(url); } catch (_) {}
+  toast('Invite link copied');
+}
+function confirmSheet({ title, sub, ok, onOk }) {
+  const w = el('div', 'csheet');
+  w.innerHTML = `<div class="sc"></div><div class="bx"><div class="card"><p><b>${title}</b>${sub}</p><button class="danger">${ok}</button></div><button class="cancel">Cancel</button></div>`;
+  stage.appendChild(w);
+  const bx = w.querySelector('.bx'), sc = w.querySelector('.sc');
+  sc.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240 });
+  bx.animate([{ transform: 'translateY(110%)' }, { transform: 'none' }], { duration: 420, easing: EASE });
+  const close = then => { sc.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, fill: 'forwards' }); bx.animate([{ transform: 'none' }, { transform: 'translateY(110%)' }], { duration: 260, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' }).finished.then(() => { w.remove(); then && then(); }); };
+  w.querySelector('.danger').onclick = () => { hapt(); close(onOk); };
+  w.querySelector('.cancel').onclick = () => close();
+  sc.onclick = () => close();
+}
+
+/* ---- builders ---------------------------------------------------- */
+function mk(page) {
+  const d = page.querySelector('.d'), id = page.dataset.id, sc = screens[id], dark = /dark/.test(sc.name);
+  const bg = sc.top;
+  page._ctls = page._ctls || [];
+  const add = (c) => { page._ctls.push(c); return c; };
+  const box = (r, css, cls = 'ctl') => { const e = el('div', cls, rectCss(r) + (css || '')); d.appendChild(e); return e; };
+  const api = {
+    dark, bg, d, page,
+    act(r, fn, o = {}) { return add({ r, tap: fn, el: o.el, noPress: o.noPress }); },
+    go: (to, t = 'p300') => () => go(to, t),
+    toast: m => () => toast(m),
+
+    /* text field: real keyboard input over the design's field */
+    field(o) {
+      const fs = o.fs || 16, area = !!o.area, fill = o.fill || '#ffffff';
+      const v = st(o.key, o.val || '');
+      const cover = area ? [o.text[0] - 2, o.text[1] - 2, o.text[2] + 4, o.text[3] + 4] : [o.text[0] - 2, o.box[1] + 3, o.text[2] + 4, o.box[3] - 6];
+      if (o.focusVar && !area) cover[2] = o.box[0] + o.box[2] - 6 - cover[0];   // the "focused" mock has a baked caret near the right edge
+      box(cover, `background:${fill};border-radius:8px`);
+      if (o.counter) box([o.counter[0] - 2, o.counter[1] - 1, o.counter[2] + 4, o.counter[3] + 2], `background:${fill}`);
+      const ring = box(o.box, `border-radius:${o.cr || 12}px`, 'fring');
+      const idle = () => {
+        if (o.error && !(o.valid && o.valid(inp.value))) { ring.style.border = `1.5px solid ${K.err}`; ring.style.boxShadow = ''; return; }
+        ring.style.border = o.focusVar || o.error ? `1.5px solid ${dark ? DK.fieldLine : K.line}` : '0'; ring.style.boxShadow = o.focusVar ? `0 0 0 4px ${bg}` : '';
+      };
+      let inp;
+      if (o.kind === 'date' || o.kind === 'time') {
+        const shown = el('div', 'ctl', rectCss([o.text[0], o.box[1], o.text[2], o.box[3]]) + `display:flex;align-items:center;font:400 ${fs}px "DM Sans";color:${K.ink}`); shown.textContent = v; d.appendChild(shown);
+        inp = el('input', 'fld native', rectCss(o.box) + 'opacity:0;font-size:16px');
+        inp.type = o.kind; inp.value = o.kind === 'date' ? st(o.key + '.iso', '2026-11-07') : st(o.key + '.iso', '11:00');
+        inp.addEventListener('change', () => {
+          STATE[o.key + '.iso'] = inp.value;
+          let txt = inp.value;
+          if (o.kind === 'date' && inp.value) { const dt = new Date(inp.value + 'T12:00'); txt = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).replace(/^(\w+) /, '$1, '); }
+          STATE[o.key] = txt; shown.textContent = txt;
+        });
+      } else {
+        inp = el(area ? 'textarea' : 'input', 'fld', rectCss(area ? o.text : [o.text[0], o.box[1], o.text[2], o.box[3]]) + `font:400 ${fs}px/${area ? (o.lh || 24) + 'px' : o.box[3] + 'px'} "DM Sans";color:${o.color || (dark ? DK.text : K.ink)};--ph:${o.phc || (dark ? DK.text2 : K.ink3)}`);
+        if (!area) { inp.type = o.kind === 'password' ? 'password' : o.kind === 'email' ? 'email' : o.kind === 'search' ? 'search' : 'text'; }
+        inp.value = v; inp.placeholder = o.ph || '';
+        inp.autocomplete = o.kind === 'email' ? 'email' : o.kind === 'password' ? 'current-password' : 'off';
+        inp.autocapitalize = o.kind === 'email' || o.kind === 'password' ? 'off' : 'sentences';
+        inp.spellcheck = false; if (o.max) inp.maxLength = o.max;
+        inp.enterKeyHint = o.enter || (area ? 'enter' : 'done');
+      }
+      d.appendChild(inp);
+      add({ r: o.box, noPress: true, tap: () => { inp.focus(); if (inp.showPicker && /date|time/.test(inp.type)) { try { inp.showPicker(); } catch (_) {} } } });
+      let ctr; if (o.counter) { ctr = el('div', 'ctl', rectCss(o.counter) + `font:400 12px/16px "DM Sans";color:${K.ink3}`); d.appendChild(ctr); }
+      const sync = () => { if (o.kind !== 'date' && o.kind !== 'time') STATE[o.key] = inp.value; if (ctr) ctr.textContent = `${inp.value.length}/${o.max || 200}`; if (area) autoGrow(); idle(); o.onInput && o.onInput(inp.value); };
+      const autoGrow = () => {}; // text areas keep the designed height
+      inp.addEventListener('input', sync);
+      inp.addEventListener('focus', () => { ring.style.border = `1.5px solid ${K.clay}`; ring.style.boxShadow = `0 0 0 3px rgba(208,113,83,.16)`; keyboardIn(inp); });
+      inp.addEventListener('blur', () => { idle(); keyboardOut(); });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !area) { e.preventDefault(); if (o.onEnter) o.onEnter(inp); else inp.blur(); } });
+      sync();
+      return inp;
+    },
+
+    toggle(r, key, on, hit, onChange) {
+      const val = st(key, on);
+      const t = box(r, '', 'tg'); const k = el('i'); t.appendChild(k);
+      const paint = v => { t.style.background = v ? (dark ? DK.on : K.clay) : (dark ? '#4a4138' : K.line); k.style.left = (v ? 20 : 2) + 'px'; };
+      paint(val);
+      return add({ r: hit || r, el: t, noPress: true,
+        down: () => { k.style.width = '26px'; if (STATE[key]) k.style.left = '16px'; },
+        up: () => { k.style.width = '22px'; paint(STATE[key]); },
+        tap: () => { STATE[key] = !STATE[key]; k.style.width = '22px'; paint(STATE[key]); onChange && onChange(STATE[key]); } });
+    },
+
+    check(r, key, on, hit, onChange) {
+      const c = box(r, '', 'cb');
+      const paint = v => { c.style.background = v ? K.clay : '#fff'; c.style.border = v ? '0' : `1.5px solid ${K.line}`; c.innerHTML = v ? svg('check', 14, K.paper, 2) : ''; };
+      paint(st(key, on));
+      return add({ r: hit || r, noPress: true, tap: () => { STATE[key] = !STATE[key]; paint(STATE[key]); if (STATE[key]) c.firstChild && c.firstChild.animate([{ transform: 'scale(.3)' }, { transform: 'scale(1.15)', offset: .6 }, { transform: 'scale(1)' }], { duration: 300, easing: SPRING }); onChange && onChange(); } });
+    },
+
+    /* option rows (notification pace) — redrawn so any row can be selected */
+    radios(key, sel, rows) {
+      const els = rows.map(o => {
+        const row = box(o.r, `border-radius:16px;box-sizing:border-box;transition:background-color .2s,border-color .2s`);
+        row.innerHTML = `<i style="position:absolute;left:17px;top:26px;width:22px;height:22px;border-radius:50%;box-sizing:border-box;transition:all .2s"></i>
+          <span style="position:absolute;left:51px;top:17px;font:600 14px/20px 'DM Sans'">${o.t}</span>
+          <span style="position:absolute;left:51px;top:39px;font:400 13px/18px 'DM Sans'">${o.s}</span>
+          <em style="position:absolute;right:${o.r[2] - 341}px;top:27px;line-height:0">${o.ic}</em>`;
+        return row;
+      });
+      const paint = v => els.forEach((row, i) => {
+        const on = i === v, ic = rows[i].ic;
+        row.style.background = on ? (dark ? DK.selRow : K.tint) : (dark ? DK.row : '#fff');
+        row.style.border = `1px solid ${on ? (dark ? DK.selLine : K.clay) : (dark ? DK.rowLine : K.line2)}`;
+        const dot = row.querySelector('i'); dot.style.background = on ? K.clay : (dark ? DK.row : '#fff'); dot.style.border = on ? `7px solid ${K.clay}` : `1.5px solid ${dark ? '#5d554c' : K.line}`; dot.style.boxShadow = on ? 'inset 0 0 0 4px #fff' : '';
+        if (on) { dot.style.background = '#fff'; }
+        const [t, s] = row.querySelectorAll('span'); t.style.color = dark ? DK.text : K.ink; s.style.color = dark ? DK.text2 : K.ink2;
+        row.querySelector('em').innerHTML = svg(rows[i].icon, 20, on ? (dark ? DK.text : K.ink) : (dark ? DK.icon : '#c7b6a4'));
+      });
+      paint(st(key, sel));
+      rows.forEach((o, i) => add({ r: o.r, el: els[i], tap: () => { STATE[key] = i; paint(i); } }));
+    },
+
+    chips(key, sel, list) {
+      const els = list.map(c => box(c.r, `border-radius:999px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:500 12px/1 'DM Sans';letter-spacing:.2px;transition:all .18s`, 'pill'));
+      const paint = v => els.forEach((e, i) => { const on = i === v; e.textContent = list[i].t; e.style.background = on ? K.claySoft : '#fff'; e.style.border = `1px solid ${on ? K.clay : K.line}`; e.style.color = on ? K.clayDk : K.ink2; });
+      paint(st(key, sel));
+      list.forEach((c, i) => add({ r: c.r, el: els[i], tap: () => { STATE[key] = STATE[key] === i ? -1 : i; paint(STATE[key]); } }));
+    },
+
+    seg(key, r, segs, labels) {
+      const s = box(r, '', 'seg'); const pill = el('b'); s.appendChild(pill);
+      const sp = segs.map((g, i) => { const e = el('span', '', `left:${g[0] - r[0]}px;top:${g[1] - r[1]}px;width:${g[2]}px;height:${g[3]}px`); e.textContent = labels[i]; s.appendChild(e); return e; });
+      const paint = v => { const g = segs[v]; Object.assign(pill.style, { left: g[0] - r[0] + 'px', top: g[1] - r[1] + 'px', width: g[2] + 'px', height: g[3] + 'px' }); sp.forEach((e, i) => e.style.color = i === v ? '#fff' : K.ink2); };
+      paint(st(key, 0));
+      segs.forEach((g, i) => add({ r: g, noPress: true, tap: () => { STATE[key] = i; paint(i); } }));
+    },
+
+    /* a button redrawn so its label / state can change */
+    button(r, { label, style = 'primary', small = false, disabled = () => false, tap }) {
+      const b = box(r, `border-radius:${small ? 8 : 12}px;box-sizing:border-box;font:600 ${small ? 13 : 15}px/1 'DM Sans';transition:background-color .2s,color .2s`, 'pill');
+      const paint = () => {
+        const off = disabled(), L = typeof label === 'function' ? label() : label;
+        b.innerHTML = (style === 'accent-check' ? svg('check', 15, '#fff', 2) : '') + `<span>${L}</span>`;
+        const P = { primary: [K.ink, K.paper, 'none'], accent: [K.clay, '#fff', 'none'], 'accent-check': [K.clay, '#fff', 'none'], secondary: ['#fff', K.ink, `1px solid ${K.line}`] }[style];
+        b.style.background = off ? K.line : P[0]; b.style.color = off ? K.ink3 : P[1]; b.style.border = off ? 'none' : P[2];
+      };
+      paint(); b._paint = paint;
+      add({ r, el: b, tap: () => { if (disabled()) { shake(b); hapt(); return; } tap && tap(b); } });
+      return b;
+    },
+  };
+  return api;
+}
+const ROW_ICONS = { Active: 'sun', Balanced: 'leaf', Quiet: 'moon' };
+
+/* keyboard: keep the focused field above it, like a real app scrolling */
+let kbT = null;
+function keyboardIn(inp) {
+  clearTimeout(kbT);
+  const fit = () => {
+    const vv = window.visualViewport; if (!vv) return;
+    const r = inp.getBoundingClientRect(); const cur = parseFloat(stage.dataset.shift || 0);
+    const limit = vv.height + vv.offsetTop - 16; const over = r.bottom + 8 - limit;
+    if (over > 0 || cur) { const shift = Math.max(0, cur + Math.max(0, over)); stage.dataset.shift = shift; stage.style.transition = 'transform .32s cubic-bezier(.3,.8,.25,1)'; stage.style.transform = `translateY(${-shift}px)`; }
+    window.scrollTo(0, 0);
+  };
+  setTimeout(fit, 60); setTimeout(fit, 350);
+  if (window.visualViewport) window.visualViewport.onresize = fit;
+}
+function keyboardOut() {
+  kbT = setTimeout(() => { if (document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return; stage.dataset.shift = 0; stage.style.transform = ''; window.scrollTo(0, 0); }, 120);
+}
+
+/* ---- per-screen wiring ------------------------------------------- */
+const rowsPace = (y0, step, subs) => ['Active', 'Balanced', 'Quiet'].map((t, i) => ({ r: [20, y0 + i * step, 350, 74], t, s: subs[i], icon: ROW_ICONS[t], ic: '' }));
+const CTRL = {
+  '14:284'(a) { // Sign up — real validation
+    a.field({ key: 'su.name', box: [20, 282, 350, 48], text: [37, 294, 316, 24], val: 'Nithya Ann' });
+    a.field({ key: 'su.email', box: [20, 342, 350, 48], text: [38, 354, 306, 24], val: 'nithya@hey.com', kind: 'email', focusVar: true });
+    a.field({ key: 'su.pw', box: [20, 402, 350, 48], text: [37, 414, 316, 24], ph: 'Password (8+ characters)', kind: 'password' });
+    a.act([20, 470, 350, 48], () => { const ok = /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(STATE['su.email'] || '') && (STATE['su.pw'] || '').length >= 8; go(ok ? '37:3986' : '22:2696', 'p300'); });
+  },
+  '37:3882'(a) { // Log in
+    a.field({ key: 'li.email', box: [20, 222, 350, 48], text: [63, 234, 290, 24], val: 'nithya@hey.com', kind: 'email' });
+    const pw = a.field({ key: 'li.pw', box: [20, 282, 350, 48], text: [64, 294, 280, 24], val: 'stillness', kind: 'password', focusVar: true });
+    a.act([226, 350, 144, 36], a.toast('Reset link sent to ' + (STATE['li.email'] || 'nithya@hey.com')));
+    a.act([20, 406, 350, 48], () => { if (!(STATE['li.pw'] || '').length) { shake(pw); toast('Enter your password'); return; } go('16:569', 'f350'); });
+  },
+  '37:3986'(a) { // OTP
+    const xs = [20, 80, 139, 199, 259, 319], y = 326;
+    a.d.appendChild(el('div', 'ctl', rectCss([12, y - 8, 366, 72]) + `background:${a.bg}`));
+    const boxes = xs.map((x, i) => { const b = el('div', 'otpb', rectCss([x, y, i === 3 ? 53 : 52, 56])); a.d.appendChild(b); return b; });
+    const hidden = el('input', 'fld', rectCss([20, y, 352, 56]) + 'opacity:0;font-size:16px;color:transparent;caret-color:transparent');
+    hidden.inputMode = 'numeric'; hidden.autocomplete = 'one-time-code'; hidden.maxLength = 6; hidden.value = st('otp', '482');
+    a.d.appendChild(hidden);
+    let focused = false;
+    const paint = () => { const v = STATE.otp; boxes.forEach((b, i) => { const act = i === Math.min(v.length, 5) && (focused || v.length < 6); b.innerHTML = v[i] ? v[i] : (act && focused ? '<span class="caret"></span>' : ''); b.style.border = `${act ? 1.5 : 1}px solid ${act ? K.clay : K.line}`; b.style.boxShadow = act ? `0 0 0 3px ${K.claySoft}` : ''; }); verify._paint && verify._paint(); };
+    const verify = a.button([20, 714, 350, 48], { label: 'Verify', disabled: () => (STATE.otp || '').length < 6, tap: () => go('14:384', 'p300') });
+    hidden.addEventListener('focus', () => { focused = true; paint(); keyboardIn(hidden); });
+    hidden.addEventListener('blur', () => { focused = false; paint(); keyboardOut(); });
+    hidden.addEventListener('input', () => {
+      hidden.value = hidden.value.replace(/\D/g, '').slice(0, 6); STATE.otp = hidden.value; paint();
+      const i = Math.max(0, STATE.otp.length - 1); boxes[i] && boxes[i].animate([{ transform: 'scale(.9)' }, { transform: 'scale(1)' }], { duration: 180, easing: SPRING });
+      if (STATE.otp.length === 6) { hidden.blur(); hapt(); boxes.forEach((b, k) => b.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)' }], { duration: 320, delay: k * 40, easing: EASE })); setTimeout(() => { if (top() && top().id === '37:3986') go('14:384', 'p300'); }, 750); }
+    });
+    paint();
+    // resend countdown
+    a.d.appendChild(el('div', 'ctl', rectCss([39, 400, 200, 22]) + `background:${a.bg}`));
+    const rs = el('div', 'ctl', rectCss([40, 402, 220, 18]) + `font:400 13px/18px "DM Sans";color:${K.ink3}`); a.d.appendChild(rs);
+    let left = 24; const tick = () => { rs.innerHTML = left > 0 ? `Resend code in 0:${String(left).padStart(2, '0')}` : `<b style="color:${K.clayDk};font-weight:600">Resend code</b>`; };
+    tick(); const iv = setInterval(() => { if (!a.page.isConnected) return clearInterval(iv); if (left > 0) { left--; tick(); } }, 1000);
+    a.act([20, 396, 240, 30], () => { if (left > 0) { shake(rs); return; } left = 30; tick(); toast('New code sent to nithya@hey.com'); });
+  },
+  '14:384'(a) { // Create circle
+    a.field({ key: 'cc.name', box: [20, 410, 350, 48], text: [38, 422, 306, 24], val: 'College friends', focusVar: true });
+    const xs = [20, 68, 116, 164, 212, 260];
+    const rings = xs.map(x => { const r = el('div', 'ctl', rectCss([x, 502, 36, 36]) + 'border-radius:50%;box-sizing:border-box;transition:border-color .2s'); a.d.appendChild(r); return r; });
+    const paint = v => rings.forEach((r, i) => r.style.border = `${i === v ? 2 : 3}px solid ${i === v ? '#a6937e' : a.bg}`);
+    paint(st('cc.color', 0));
+    xs.forEach((x, i) => a.act([x, 502, 36, 36], () => { STATE['cc.color'] = i; paint(i); rings[i].animate([{ transform: 'scale(.8)' }, { transform: 'scale(1)' }], { duration: 260, easing: SPRING }); }, { el: rings[i] }));
+  },
+  '14:458'(a) { // Add friends — invite toggles, live count
+    a.field({ key: 'af.q', box: [20, 218, 350, 40], text: [58, 228, 300, 20], ph: 'Search name or phone number', kind: 'search', fs: 14, fill: '#ece3d9', cr: 12 });
+    const names = ['Aarav', 'Diya', 'Karthik', 'Meera', 'Nandini', 'Rohan'];
+    const inv = st('invited', { Aarav: true, Diya: true });
+    const btn = a.button([20, 714, 350, 48], { label: () => { const n = Object.values(inv).filter(Boolean).length; return n ? `Continue · ${n} invited` : 'Skip for now'; }, tap: () => go('14:575', 'p300') });
+    names.forEach((n, i) => {
+      const y = 304 + i * 56;
+      a.d.appendChild(el('div', 'ctl', rectCss([262, y + 10, 110, 36]) + `background:${a.bg}`));
+      const p = el('div', 'pill', `top:${y + 14}px;height:28px;border-radius:999px;font:600 13px/1 'DM Sans'`); a.d.appendChild(p);
+      const paint = () => { const on = !!inv[n]; p.innerHTML = on ? svg('check', 14, K.ink2, 2) + '<span>Invited</span>' : '<span>Invite</span>'; p.style.width = (on ? 86 : 59) + 'px'; p.style.left = (370 - (on ? 86 : 59)) + 'px'; p.style.background = on ? K.line2 : K.claySoft; p.style.color = on ? K.ink2 : K.clayDk; };
+      paint();
+      a.act([20, y, 350, 56], () => { inv[n] = !inv[n]; paint(); btn._paint(); p.animate([{ transform: 'scale(.9)' }, { transform: 'scale(1)' }], { duration: 260, easing: SPRING }); if (inv[n]) toast(`Invite sent to ${n}`); }, { noPress: true });
+    });
+    a.act([117, 774, 156, 36], () => shareInvite());
+  },
+  '14:619'(a) { // What to share
+    [['Photos', 297, true], ['Notes', 369, true], ['Places', 441, false], ['Voice', 513, true]].forEach(([n, y, on]) => a.check([348, y, 22, 22], 'share.' + n, on, [20, y - 23, 350, 68]));
+  },
+  '14:740'(a) { a.radios('pace', 1, rowsPace(214, 86, ['Get regular notifications', 'A few updates a day · recommended', 'Only important updates, once a day'])); },
+  '38:4269'(a) { a.radios('pace', 1, rowsPace(140, 86, ['Every moment, as it happens', 'Up to 3 digests a day', 'One digest at 19:00'])); notifToggles(a); },
+  '38:5090'(a) { a.radios('pace', 1, rowsPace(140, 86, ['Every moment, as it happens', 'Up to 3 digests a day', 'One digest at 19:00'])); notifToggles(a); },
+  '16:569'(a) { homeBits(a); }, '16:842'(a) { homeBits(a); }, '38:4469'(a) { homeBits(a, true); }, '18:1854'(a) { homeBits(a); }, '22:3032'(a) { homeBits(a); }, '23:3511'(a) { homeBits(a); },
+  '16:964'(a) { deck(a); },
+  '16:1079'(a) { // reply privately
+    const p = el('div', 'ctl', rectCss([16, 750, 306, 44]) + 'border-radius:22px;background:rgba(40,32,26,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.75)'); a.d.appendChild(p);
+    a.field({ key: 'reply', box: [16, 750, 306, 44], text: [33, 762, 270, 20], ph: 'Reply privately…', fs: 14, fill: 'transparent', color: '#fff', phc: 'rgba(255,255,255,.92)', cr: 22, enter: 'send',
+      onEnter: inp => { if (!inp.value.trim()) return inp.blur(); toast('Reply sent privately to Diya'); inp.value = ''; STATE.reply = ''; inp.blur(); } });
+  },
+  '16:1228'(a) { a.seg('upd.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['College', 'All circles']); },
+  '22:3173'(a) { a.seg('upd.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['College', 'All circles']); },
+  '20:1915'(a) { a.seg('loops.seg', [20, 158, 350, 40], [[24, 162, 169, 32], [197, 162, 169, 32]], ['Active (2)', 'Past']); a.act([20, 486, 350, 128], a.go('20:2155')); },
+  '38:4199'(a) { a.seg('saved.seg', [20, 114, 350, 40], [[24, 118, 169, 32], [197, 118, 169, 32]], ['Moments', 'Places']); },
+  '18:1316'(a) { // photo tools
+    [['Crop', 52], ['Filters', 132], ['Add text', 214], ['Retake photo', 296]].forEach(([n, x]) => {
+      const r = el('div', 'ctl', rectCss([x - 3, 625, 46, 46]) + 'border-radius:50%;box-sizing:border-box;border:2px solid transparent;transition:border-color .2s'); a.d.appendChild(r);
+      a.act([x, 628, 40, 40], () => { a.d.querySelectorAll('.tool-on').forEach(t => { t.classList.remove('tool-on'); t.style.borderColor = 'transparent'; }); r.classList.add('tool-on'); r.style.borderColor = K.clay; toast(n); });
+    });
+  },
+  '18:1427'(a) { // note
+    const ta = a.field({ key: 'note', area: true, box: [20, 114, 350, 200], text: [37, 131, 316, 142], val: 'Finally finished the first chapter. Small wins.', counter: [37, 281, 316, 16], max: 200, cr: 16 });
+    // the keyboard drawn in the mock types too
+    let shift = false;
+    const put = f => { ta.value = f(ta.value).slice(0, 200); ta.dispatchEvent(new Event('input')); };
+    const key = (r, f) => a.act(r, f);
+    [['qwertyuiop', 8, 609], ['asdfghjkl', 27, 662], ['zxcvbnm', 65, 715]].forEach(([row, x0, y]) => [...row].forEach((ch, i) => key([x0 + i * 38, y, 32, 42], () => { put(v => v + (shift ? ch.toUpperCase() : ch)); shift = false; })));
+    key([8, 715, 44, 42], () => { shift = !shift; toast(shift ? 'Shift' : 'Shift off'); });
+    key([338, 715, 44, 42], () => put(v => v.slice(0, -1)));
+    key([104, 768, 182, 42], () => put(v => v + ' '));
+    key([289, 768, 93, 42], () => put(v => v + '\n'));
+    key([8, 768, 90, 42], () => {});
+    a.chips('mood', 1, [{ r: [20, 326, 71, 34], t: '☕ Calm' }, { r: [99, 326, 75, 34], t: '✨ Proud' }, { r: [182, 326, 91, 34], t: '🌧️ Low-key' }]);
+  },
+  '18:1563'(a) { // place
+    a.field({ key: 'place.q', box: [20, 114, 350, 40], text: [58, 124, 300, 20], ph: 'Search place', kind: 'search', fs: 14, fill: '#ece3d9' });
+    [328, 392, 456, 520].forEach(y => a.act([20, y, 350, 64], a.go('18:1744')));
+  },
+  '18:1675'(a) { voice(a); },
+  '18:1744'(a) { // share to — checkboxes drive the button label
+    a.field({ key: 'cap', box: [20, 238, 350, 48], text: [37, 250, 316, 24], val: 'Clock tower on the way home' });
+    const C = [['College', 355, true], ['Bangalore', 427, false], ['Family', 499, false]];
+    const label = () => { const on = C.filter(c => STATE['to.' + c[0]]).map(c => c[0]); return on.length === 0 ? 'Choose a circle' : on.length === 1 ? `Share with ${on[0]}` : on.length === 2 ? `Share with ${on[0]} & ${on[1]}` : 'Share with 3 circles'; };
+    const btn = a.button([20, 762, 350, 48], { label, style: 'accent', disabled: () => !C.some(c => STATE['to.' + c[0]]), tap: () => go(navigator.onLine === false ? '22:3256' : '18:1854', 'f400') });
+    C.forEach(([n, y, on]) => a.check([348, y, 22, 22], 'to.' + n, on, [20, y - 23, 350, 68], () => btn._paint()));
+  },
+  '22:3256'(a) { [['College', 241, true], ['Bangalore', 325, false]].forEach(([n, y, on]) => a.check([348, y, 22, 22], 'to.' + n, on, [20, y - 23, 350, 68])); },
+  '19:1828'(a) { a.act([20, 400, 350, 64], a.toast('Opening Blue Tokai in Maps…')); },
+  '38:4779'(a) { a.act([20, 400, 350, 64], a.toast('Opening Blue Tokai in Maps…')); a.act([20, 714, 350, 48], a.go('19:1932')); a.act([153, 774, 84, 36], a.go('19:1987', 'u320')); },
+  '19:1932'(a) {
+    a.field({ key: 'loopq', area: true, box: [20, 322, 350, 150], text: [37, 339, 316, 92], ph: 'e.g. Should we try this together next time?', counter: [37, 439, 316, 16], max: 200, cr: 16 });
+    a.toggle([310, 506, 44, 26], 'loop.plan', false, [20, 490, 350, 58], v => v && toast('Plan suggestion added'));
+  },
+  '20:2089'(a) { a.field({ key: 'add.loop', area: true, box: [20, 406, 350, 130], text: [37, 423, 316, 72], val: 'I went to the Indiranagar branch, it’s amazing!', counter: [37, 503, 316, 16], max: 200, cr: 16 }); },
+  '20:2155'(a) { composer(a, false); }, '38:4865'(a) { composer(a, true); },
+  '20:2276'(a) { // plan together
+    a.field({ key: 'pl.what', box: [20, 254, 350, 48], text: [37, 266, 316, 24], val: 'Coffee at Blue Tokai' });
+    a.field({ key: 'pl.date', box: [20, 334, 169, 48], text: [63, 346, 109, 24], val: 'Sat, 7 Nov', kind: 'date' });
+    a.field({ key: 'pl.time', box: [201, 334, 169, 48], text: [245, 346, 99, 24], val: '11:00', kind: 'time', focusVar: true });
+    a.field({ key: 'pl.where', box: [20, 414, 350, 48], text: [63, 426, 290, 24], val: 'Blue Tokai, Indiranagar' });
+    a.field({ key: 'pl.note', box: [20, 494, 350, 48], text: [37, 506, 316, 24], ph: 'Add a note (optional)' });
+  },
+  '20:2378'(a) { // RSVP
+    const opts = [['Going', [41, 351, 97, 36]], ['Maybe', [146, 351, 99, 36]], ['Can’t', [252, 351, 97, 36]]];
+    const bs = []; const paint = () => bs.forEach((b, i) => b._paint());
+    opts.forEach(([t, r], i) => bs.push(a.button(r, { label: t, small: true, style: 'secondary', tap: () => { STATE.rsvp = i; paint(); toast(i === 0 ? 'You’re going — see you there' : i === 1 ? 'Marked as maybe' : 'No worries — the loop stays open'); } })));
+    st('rsvp', 0);
+    bs.forEach((b, i) => { const p = b._paint; b._paint = () => { p(); const on = STATE.rsvp === i; b.style.background = on ? K.clay : '#fff'; b.style.color = on ? '#fff' : K.ink; b.style.border = on ? 'none' : `1px solid ${K.line}`; b.innerHTML = (on ? svg('check', 15, '#fff', 2) : '') + `<span>${opts[i][0]}</span>`; }; });
+    paint();
+  },
+  '21:2332'(a) { profile(a, '38:4269'); }, '38:4966'(a) { profile(a, '38:5090'); },
+  '21:2516'(a) {
+    a.toggle([310, 380, 44, 26], 'mute', true, [36, 367, 318, 52], v => toast(v ? 'College muted' : 'College unmuted'));
+    a.act([36, 208, 318, 52], a.toast('Renaming circles comes in the next version'));
+  },
+  '21:2629'(a) {
+    a.toggle([310, 455, 44, 26], 'quiet', true, [36, 442, 318, 52], v => toast(v ? 'Quiet mode on · your circle sees “resting”' : 'Quiet mode off'));
+    a.toggle([310, 508, 44, 26], 'crossings', true, [36, 495, 318, 52]);
+    [['Sharing preferences', 140], ['Audience control', 193], ['Blocked users', 246], ['Data & privacy', 299]].forEach(([n, y]) => a.act([36, y, 318, 52], a.toast(n + ' — coming in the next version')));
+    a.act([36, 389, 318, 52], a.go('38:4269'));
+  },
+  '21:2746'(a) { a.field({ key: 'mem.q', box: [20, 114, 350, 40], text: [58, 124, 300, 20], ph: 'Search members', kind: 'search', fs: 14, fill: '#ece3d9' }); },
+  '38:4104'(a) { // edit profile + real photo
+    avatar(a, [151, 114, 88, 88]);
+    a.act([123, 222, 145, 36], () => pickPhoto(a));
+    a.act([151, 114, 88, 88], () => pickPhoto(a));
+    a.field({ key: 'ep.name', box: [20, 298, 350, 48], text: [37, 310, 316, 24], val: 'Nithya' });
+    a.field({ key: 'ep.user', box: [20, 378, 350, 48], text: [37, 390, 316, 24], val: 'nithya.ann' });
+    a.field({ key: 'ep.status', box: [20, 478, 350, 48], text: [37, 490, 316, 24], ph: 'A line about you (optional)' });
+    a.field({ key: 'ep.city', box: [20, 558, 350, 48], text: [63, 570, 290, 24], val: 'Bangalore' });
+    a.act([312, 60, 62, 36], () => { toast('Profile saved'); back(); });
+  },
+  '22:2696'(a) { // validation error — fix it live
+    a.field({ key: 'su.name', box: [20, 222, 350, 48], text: [37, 234, 316, 24], val: 'Nithya Ann' });
+    const okEmail = v => /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v), okPw = v => v.length >= 8;
+    const m1 = el('div', 'ctl', rectCss([20, 332, 330, 20]) + `background:${a.bg};opacity:0;transition:opacity .2s`); const m2 = el('div', 'ctl', rectCss([20, 412, 330, 20]) + `background:${a.bg};opacity:0;transition:opacity .2s`); a.d.append(m1, m2);
+    let btn;
+    const upd = () => { m1.style.opacity = okEmail(STATE['e1.email'] || '') ? 1 : 0; m2.style.opacity = okPw(STATE['e1.pw'] || '') ? 1 : 0; btn && btn._paint(); };
+    a.field({ key: 'e1.email', box: [20, 282, 350, 48], text: [37, 294, 290, 24], val: STATE['su.email'] && !okEmail(STATE['su.email']) ? STATE['su.email'] : 'nithya@hey', kind: 'email', error: true, valid: okEmail, onInput: upd });
+    a.field({ key: 'e1.pw', box: [20, 362, 350, 48], text: [37, 374, 290, 24], val: STATE['su.pw'] && !okPw(STATE['su.pw']) ? STATE['su.pw'] : 'abcd', kind: 'password', error: true, valid: okPw, onInput: upd });
+    btn = a.button([20, 450, 350, 48], { label: 'Continue', disabled: () => !(okEmail(STATE['e1.email'] || '') && okPw(STATE['e1.pw'] || '')), tap: () => { STATE['su.email'] = STATE['e1.email']; STATE['su.pw'] = STATE['e1.pw']; go('37:3986', 'p300'); } });
+    upd();
+  },
+  '22:2783'(a) { a.act([20, 714, 350, 48], a.toast('Asked Diya for a new invite link')); },
+  '22:2830'(a) { a.act([20, 714, 350, 48], () => { toast('College is full — 12 of 12'); shake(a.d.querySelector('.ctl')); }); a.act([87, 774, 216, 36], a.go('14:384')); },
+  '22:3347'(a) { a.act([20, 714, 350, 48], a.toast('Opens Settings → STILL → Photos')); },
+  '23:3195'(a) { a.act([20, 714, 350, 48], a.toast('Opens Settings → STILL → Microphone')); },
+  '23:3702'(a) { a.act([137, 774, 116, 36], a.go('16:1079', 'f400')); },
+  '23:3745'(a) { let done = false; a.act([131, 774, 128, 36], () => { if (done) return toast('Diya is already blocked'); done = true; toast('Diya is blocked. Undo anytime in Privacy.'); }); },
+};
+function notifToggles(a) {
+  a.toggle([310, 442, 44, 26], 'quiet', true, [20, 398, 350, 84], v => toast(v ? 'Quiet hours on · 22:00 – 08:00' : 'Quiet hours off'));
+  a.toggle([310, 537, 44, 26], 'crossings', true, [36, 524, 318, 52]);
+  a.toggle([310, 590, 44, 26], 'reminders', true, [36, 577, 318, 52]);
+  a.toggle([310, 643, 44, 26], 'recap', true, [36, 630, 318, 52]);
+}
+function homeBits(a, dark) {
+  a.act([286, 58, 40, 40], a.toast('Search comes in the next version'));
+  a.act([20, 114, 72, 84], () => {});
+  a.act([196, 114, 72, 84], a.go(dark ? '38:4469' : '16:842', 'f200'));
+}
+function profile(a, notif) {
+  avatar(a, [151, 74, 88, 88]);
+  a.act([72, 256, 130, 34], a.go(notif));
+  a.act([36, 522, 318, 52], a.toast('Help & feedback — coming in the next version'));
+  a.act([36, 594, 318, 52], () => confirmSheet({ title: 'Log out of STILL?', sub: 'Your circles and moments stay safe. Log back in anytime.', ok: 'Log out', onOk: () => jump('37:3882') }));
+}
+function avatar(a, r) {
+  if (!STATE.avatar) return;
+  const e = el('div', 'ctl avatar', rectCss(r) + `border-radius:50%;background:url(${STATE.avatar}) center/cover`); a.d.appendChild(e);
+}
+const filePick = (() => { const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*'; f.style.display = 'none'; document.body.appendChild(f); return f; })();
+function pickPhoto(a) {
+  filePick.value = '';
+  filePick.onchange = () => {
+    const file = filePick.files && filePick.files[0]; if (!file) return;
+    const img = new Image(); img.onload = () => {
+      const c = document.createElement('canvas'); const s = 264; c.width = c.height = s; const g = c.getContext('2d');
+      const m = Math.min(img.width, img.height); g.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, s, s);
+      STATE.avatar = c.toDataURL('image/jpeg', .86);
+      a.d.querySelectorAll('.avatar').forEach(n => n.remove()); avatar(a, [151, 114, 88, 88]);
+      a.d.querySelector('.avatar').animate([{ transform: 'scale(.85)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 380, easing: SPRING });
+      toast('Photo updated'); URL.revokeObjectURL(img.src);
+    };
+    img.src = URL.createObjectURL(file);
+  };
+  filePick.click();
+}
+/* postcard deck: swipe or tap the arrows; counter updates; last card → done */
+function deck(a) {
+  const R = [35, 184, 320, 470], n = 5;
+  let i = st('deck', 1);
+  a.d.appendChild(el('div', 'ctl', rectCss([150, 684, 90, 28]) + `background:${a.bg}`));
+  const ctr = el('div', 'ctl', rectCss([150, 684, 90, 28]) + `display:grid;place-items:center;font:500 15px/1 "DM Sans";color:${K.ink2}`); a.d.appendChild(ctr);
+  const show = () => { ctr.textContent = `${i} / ${n}`; };
+  show();
+  const card = () => { const c = cropEl(a.page.dataset.id, R); c.style.zIndex = 2; return c; };
+  let busyD = false;
+  const turn = async dir => {
+    if (busyD) return;
+    if (dir > 0 && i >= n) { STATE.deck = 1; return go('16:1337', 'p300'); }
+    if (dir < 0 && i <= 1) { shake(ctr); return; }
+    busyD = true; hapt();
+    const under = el('div', 'ctl', rectCss(R) + `background:${a.bg};z-index:1`); a.d.appendChild(under);
+    const c = card(); a.d.appendChild(c);
+    await c.animate([{ transform: 'none', opacity: 1 }, { transform: `translateX(${dir > 0 ? -125 : 125}%) rotate(${dir > 0 ? -9 : 9}deg)`, opacity: .2 }], { duration: 360, easing: 'cubic-bezier(.4,0,.8,.6)', fill: 'forwards' }).finished;
+    i += dir; STATE.deck = i; show();
+    c.remove(); const nx = card(); a.d.appendChild(nx);
+    await nx.animate([{ transform: 'translateY(14px) scale(.95)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 380, easing: EASE }).finished;
+    nx.remove(); under.remove(); busyD = false;
+  };
+  a.act([229, 678, 40, 40], () => turn(1));
+  a.act([122, 678, 40, 40], () => turn(-1));
+  let live = null;
+  const c = a.act(R, () => go('16:1079', 'f400'), { noPress: true });
+  c.drag = (dx, dy, phase) => {
+    if (phase === 'move') { if (!live) { live = card(); a.d.appendChild(live); live._u = el('div', 'ctl', rectCss(R) + `background:${a.bg};z-index:1`); a.d.appendChild(live._u); } live.style.transform = `translateX(${dx / G.s}px) rotate(${dx / G.s / 30}deg)`; return; }
+    const L = live; live = null; if (!L) return;
+    const ok = Math.abs(dx) > 70 && !((dx < 0 && i >= n) || (dx > 0 && i <= 1));
+    if (!ok) { L.animate([{ transform: L.style.transform }, { transform: 'none' }], { duration: 300, easing: SPRING }).finished.then(() => { L._u.remove(); L.remove(); }); if (Math.abs(dx) > 70 && dx < 0 && i >= n) { STATE.deck = 1; go('16:1337', 'p300'); } return; }
+    L._u.remove(); L.remove(); turn(dx < 0 ? 1 : -1);
+  };
+}
+/* voice note: live timer, pause/resume, slide to send */
+function voice(a) {
+  a.d.appendChild(el('div', 'ctl', rectCss([140, 370, 110, 56]) + `background:${a.bg}`));
+  const tm = el('div', 'ctl', rectCss([130, 372, 130, 52]) + `display:grid;place-items:center;font:400 42px/1 "Newsreader",serif;color:${K.clayDk}`); a.d.appendChild(tm);
+  let sec = 8, rec = true; const show = () => tm.textContent = `0:${String(Math.min(sec, 60)).padStart(2, '0')}`; show();
+  const iv = setInterval(() => { if (!a.page.isConnected) return clearInterval(iv); if (rec && sec < 60) { sec++; show(); } }, 1000);
+  a.act([155, 485, 80, 80], () => { rec = !rec; a.page.querySelectorAll('.fx-ring,.fx-breathe').forEach(n => n.getAnimations().forEach(x => rec ? x.play() : x.pause())); toast(rec ? 'Recording' : 'Paused · tap to continue'); });
+  // slide to send
+  a.d.appendChild(el('div', 'ctl', rectCss([119, 595, 40, 40]) + `background:#ebe3d8;border-radius:50%`));
+  a.d.appendChild(el('div', 'ctl', rectCss([168, 603, 100, 24]) + `background:#ebe3d8`));
+  const lab = cropEl(a.page.dataset.id, [170, 603, 96, 24]); a.d.appendChild(lab);
+  const knob = cropEl(a.page.dataset.id, [119, 595, 40, 40]); knob.style.borderRadius = '50%'; knob.style.boxShadow = '0 2px 8px rgba(0,0,0,.12)'; a.d.appendChild(knob);
+  const max = 251 - 139;
+  const c = a.act([114, 589, 163, 52], () => slideTo(max), { noPress: true });
+  const slideTo = x => { knob.animate([{ transform: knob.style.transform || 'none' }, { transform: `translateX(${x}px)` }], { duration: 260, easing: EASE, fill: 'forwards' }).finished.then(() => { hapt(); go('18:1744', 'p300'); }); };
+  c.drag = (dx, dy, phase) => {
+    const x = Math.max(0, Math.min(max, dx / G.s));
+    if (phase === 'move') { knob.style.transform = `translateX(${x}px)`; lab.style.opacity = 1 - x / max; return; }
+    if (x > max * .7) slideTo(max); else { knob.animate([{ transform: knob.style.transform }, { transform: 'none' }], { duration: 320, easing: SPRING }); knob.style.transform = ''; lab.style.opacity = 1; }
+  };
+}
+/* loop composer: type a thought, it appears in the thread */
+function composer(a, dark) {
+  const f = el('div', 'ctl', rectCss([64, 762, 262, 40]) + `border-radius:20px;box-sizing:border-box;background:${dark ? DK.field : '#fff'};border:1px solid ${dark ? DK.fieldLine : K.line}`); a.d.appendChild(f);
+  const inp = a.field({ key: dark ? 'thought.d' : 'thought', box: [64, 762, 262, 40], text: [81, 762, 236, 40], ph: 'Add a thought…', fs: 15, fill: 'transparent', cr: 20, enter: 'send', onEnter: () => send() });
+  const send = () => {
+    const v = (inp.value || '').trim(); if (!v) { shake(f); return; }
+    const b = el('div', 'bubble'); b.textContent = v; b.style.bottom = (844 - 742) + 'px'; a.d.appendChild(b);
+    const lift = b.offsetHeight + 8;   // earlier thoughts move up, like a real thread
+    a.d.querySelectorAll('.bubble').forEach(o => { if (o === b) return; const nb = parseFloat(o.style.bottom) + lift; o.animate([{ transform: `translateY(${lift}px)` }, { transform: 'none' }], { duration: 320, easing: EASE }); o.style.bottom = nb + 'px'; if (nb > 400) o.remove(); });
+    b.animate([{ transform: 'translateY(20px) scale(.9)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 380, easing: SPRING });
+    inp.value = ''; STATE[dark ? 'thought.d' : 'thought'] = ''; hapt();
+  };
+  a.act([334, 762, 40, 40], send);
+}
+function buildControls(page) {
+  const fn = CTRL[page.dataset.id]; if (!fn) return;
+  try { fn(mk(page)); } catch (e) { console.error('controls', page.dataset.id, e); }
+}
+function ctlAt(p) {
+  const e = top(); if (!e || !e.page._ctls) return null;
+  const L = e.page._ctls;
+  for (let i = L.length - 1; i >= 0; i--) { const [x, y, w, h] = L[i].r; if (p.x >= x - 4 && p.x <= x + w + 4 && p.y >= y - 4 && p.y <= y + h + 4) return L[i]; }
+  return null;
+}
+function pressCtl(c, down) {
+  if (c.down && down) c.down(); if (c.up && !down) c.up();
+  if (c.noPress) return;
+  if (!c.el) { if (down) pressStart(c); else pressRelease(); return; }
+  c.el.animate([{ transform: down ? 'scale(1)' : 'scale(.96)' }, { transform: down ? 'scale(.96)' : 'scale(1)' }], { duration: down ? 120 : 200, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
 }
 
 // read-only hook for automated checks
